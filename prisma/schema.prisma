@@ -15,8 +15,13 @@ datasource db {
 }
 
 model Filme {
-  id    Int     @default(autoincrement()) @id
-  titulo String  @unique
+  id            Int      @id @default(autoincrement())
+  titulo        String   @unique
+  genero        String
+  descricao     String
+  classificacao String
+  duracao       Int
+  estreia       DateTime
 
   @@map("filmes")
 }
