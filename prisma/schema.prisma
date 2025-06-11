@@ -26,4 +26,11 @@ model Filme {
   @@map("filmes")
 }
 
+model Sala {
+  id          Int      @id @default(autoincrement())
+  nomeSala      String      
+  capacidade  Int
+  tipo        String
 
+  @@map("salas")
+}
