@@ -1,34 +1,37 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { SessoesService } from './sessoes.service';
-import { CreateSessoeDto } from './dto/create-sessoe.dto';
+import { CreateSessaoDto } from './dto/create-sessoe.dto';
 import { UpdateSessoeDto } from './dto/update-sessoe.dto';
+
 
 @Controller('sessoes')
 export class SessoesController {
   constructor(private readonly sessoesService: SessoesService) {}
 
   @Post()
-  create(@Body() createSessoeDto: CreateSessoeDto) {
-    return this.sessoesService.create(createSessoeDto);
-  }
+    create(@Body() createSessaoDto: CreateSessaoDto) {
+      console.log("passou");
+      return this.sessoesService.criarSessao(createSessaoDto);
+    }
+  
+    @Get()
+    findAll() {
+      return this.sessoesService.getSessoes();
+    }
 
-  @Get()
-  findAll() {
-    return this.sessoesService.findAll();
-  }
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+      return this.sessoesService.getSessaoPorId(+id);
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sessoesService.findOne(+id);
-  }
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateSessoeDto: UpdateSessoeDto) {
+      return this.sessoesService.atualizarSessao(+id, updateSessoeDto);
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSessoeDto: UpdateSessoeDto) {
-    return this.sessoesService.update(+id, updateSessoeDto);
-  }
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+      return this.sessoesService.removerSessao(+id);
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sessoesService.remove(+id);
-  }
 }

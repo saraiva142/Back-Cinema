@@ -1,26 +1,65 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSessoeDto } from './dto/create-sessoe.dto';
 import { UpdateSessoeDto } from './dto/update-sessoe.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class SessoesService {
-  create(createSessoeDto: CreateSessoeDto) {
-    return 'This action adds a new sessoe';
-  }
+  constructor(private prisma: PrismaService) {}
+  
+    async getSessoes() {
+      return await this.prisma.sessao.findMany({
+        include: {
+          filme: true,
+          sala: true,
+        },
+      });
+      
+    }
+  
+    async criarSessao(data: {
+      dataHora: string;
+      valor: string;
+      idioma: string;
+      formato: string;
+      filmeId: number;
+      salaId: number;
+    }) {
+      return await this.prisma.sessao.create({
+        data:{
+          ...data,
+          dataHora: new Date(data.dataHora),
+          valor: parseFloat(data.valor),
+        },
+      });
+    }
+  
+    async getSessaoPorId(id: number) {
+      return await this.prisma.sessao.findUnique({
+        where: { id },
+      });
+    }
 
-  findAll() {
-    return `This action returns all sessoes`;
-  }
+    async atualizarSessao(id: number, data: {
+      dataHora?: string;
+      valor?: string;
+      idioma?: string;
+      formato?: string;
+      filmeId?: number;
+      salaId?: number;
+    }) {
+      return await this.prisma.sessao.update({
+        where: { id },
+        data: {
+          ...data,
+          dataHora: data.dataHora ? new Date(data.dataHora) : undefined,
+          valor: data.valor ? parseFloat(data.valor) : undefined,
+        },
+      });
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} sessoe`;
-  }
-
-  update(id: number, updateSessoeDto: UpdateSessoeDto) {
-    return `This action updates a #${id} sessoe`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} sessoe`;
-  }
+    async removerSessao(id: number) {
+      return await this.prisma.sessao.delete({
+        where: { id },
+      });
+    }
 }
