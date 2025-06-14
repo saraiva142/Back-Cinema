@@ -35,7 +35,7 @@ model Sala {
   tipo        String
 
   sessoes    Sessao[] // <- relação com Sessao
-
+  
   @@map("salas")
 }
 
@@ -51,4 +51,20 @@ model Sessao {
 
   filme     Filme    @relation(fields: [filmeId], references: [id])
   sala      Sala     @relation(fields: [salaId], references: [id])
+
+  ingressos Ingresso[]
+}
+
+model Ingresso {
+  id         Int      @id @default(autoincrement())
+  cliente    String
+  cpf        String
+  assento    String
+  pagamento  String
+
+  sessaoId   Int
+  sessao     Sessao   @relation(fields: [sessaoId], references: [id])
+
+  // Adicione índices ou restrições conforme necessário
+  @@map("ingressos")
 }

@@ -1,26 +1,73 @@
 import { Injectable } from '@nestjs/common';
 import { CreateIngressoDto } from './dto/create-ingresso.dto';
 import { UpdateIngressoDto } from './dto/update-ingresso.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class IngressosService {
-  create(createIngressoDto: CreateIngressoDto) {
-    return 'This action adds a new ingresso';
+  constructor(private prisma: PrismaService) {}
+
+  async findAll() {
+    return await this.prisma.ingresso.findMany({
+      include: {
+        sessao: {
+          include: {
+            filme: true,
+            sala: true,
+          },
+        },
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all ingressos`;
+  async findOne(id: number) {
+    return await this.prisma.ingresso.findUnique({
+      where: { id },
+      include: {
+        sessao: {
+          include: {
+            filme: true,
+            sala: true,
+          },
+        },
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} ingresso`;
+  async create(data: CreateIngressoDto) {
+    return await this.prisma.ingresso.create({
+      data,
+      include: {
+        sessao: {
+          include: {
+            filme: true,
+            sala: true,
+          },
+        },
+      },
+    });
   }
 
-  update(id: number, updateIngressoDto: UpdateIngressoDto) {
-    return `This action updates a #${id} ingresso`;
+  async update(id: number, data: UpdateIngressoDto) {
+    return await this.prisma.ingresso.update({
+      where: { id },
+      data,
+      include: {
+        sessao: {
+          include: {
+            filme: true,
+            sala: true,
+          },
+        },
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ingresso`;
+  async remove(id: number) {
+    return await this.prisma.ingresso.delete({
+      where: { id },
+    });
   }
+
+
 }

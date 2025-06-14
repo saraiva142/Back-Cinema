@@ -6,9 +6,10 @@ import { UpdateIngressoDto } from './dto/update-ingresso.dto';
 @Controller('ingressos')
 export class IngressosController {
   constructor(private readonly ingressosService: IngressosService) {}
-
+  
   @Post()
   create(@Body() createIngressoDto: CreateIngressoDto) {
+    console.log('Passou');
     return this.ingressosService.create(createIngressoDto);
   }
 
